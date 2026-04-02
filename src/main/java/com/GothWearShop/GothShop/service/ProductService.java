@@ -1,18 +1,42 @@
 package com.GothWearShop.GothShop.service;
 
-import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.GothWearShop.GothShop.dto.MessageResponseDTO;
+import com.GothWearShop.GothShop.dto.ProductRequestDTO;
 import com.GothWearShop.GothShop.entity.Product;
+import com.GothWearShop.GothShop.repository.ProductRepository;
+
+
 
 public class ProductService {
-    public List<Product> getActiveProducts() {
-    List<Product> products = productRepository.findByStatusTrue();
-    
-    if (products.isEmpty()) {
-        throw new RuntimeException("No hay productos disponibles");
-    }
-    
-    return products;
-}
 
+     @Autowired
+
+    private ProductRepository productRepository;
+
+    public MessageResponseDTO register(ProductRequestDTO request) {
+        MessageResponseDTO response = new MessageResponseDTO();
+        response.setMessage("Registro exitoso");
+
+        if (productRepository.findByStatusTrue().isPresent()) {
+            throw new RuntimeException("Este nombre de usuario ya está en uso");
+        }
+
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+
+        productRepository.save(product);
+
+        return response;
+    }
+
+     public Optional<Product> getActiveProducts() {
+        
+    return productRepository.findByStatusTrue();
+}
 }
