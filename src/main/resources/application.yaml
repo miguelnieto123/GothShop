@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: GothShop
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/GothWear
+    username: root
+    password: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+server:
+  port: 9090
+
+security:
+  jwt:
+    secret-key: wRJ9Jh05ec02ffJEILZ6GR6FZhu8t7j9UApaDJ7pvUw= # Genera con openssl rand -base64 32
+    token-expiration: 600000 # 10 min expresado en ms
+  

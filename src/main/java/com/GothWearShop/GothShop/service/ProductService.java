@@ -17,11 +17,11 @@ public class ProductService {
 
     private ProductRepository productRepository;
 
-    public MessageResponseDTO register(ProductRequestDTO request) {
+    public MessageResponseDTO register1(ProductRequestDTO request) {
         MessageResponseDTO response = new MessageResponseDTO();
         response.setMessage("Registro exitoso");
 
-        if (productRepository.findByStatusTrue().isPresent()) {
+        if (productRepository.findByStatusTrue(true).isPresent()) {
             throw new RuntimeException("Este nombre de usuario ya está en uso");
         }
 
@@ -35,8 +35,8 @@ public class ProductService {
         return response;
     }
 
-     public Optional<Product> getActiveProducts() {
-        
-    return productRepository.findByStatusTrue();
+     public Optional<Product> getActiveProducts() {  
+    return productRepository.findByStatusTrue(true);
 }
+
 }

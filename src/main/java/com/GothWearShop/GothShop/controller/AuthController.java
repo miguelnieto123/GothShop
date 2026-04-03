@@ -1,6 +1,8 @@
 package com.GothWearShop.GothShop.controller;
 
 import com.GothWearShop.GothShop.dto.*;
+import com.GothWearShop.GothShop.dto.MessageResponseDTO;
+import com.GothWearShop.GothShop.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,24 +62,4 @@ public class AuthController {
         }
     }
 
-    private static class AuthService {
-
-        public AuthService() {
-        }
-
-        public RefreshTokenResponseDTO refreshToken(String token) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'refreshToken'");
-        }
-
-        public LoginResponseDTO login(LoginRequestDTO request) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'login'");
-        }
-
-        public MessageResponseDTO register(RegisterRequestDTO request) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'register'");
-        }
-    }
 }

@@ -12,7 +12,7 @@ import com.GothWearShop.GothShop.dto.RefreshTokenResponseDTO;
 import com.GothWearShop.GothShop.dto.RegisterRequestDTO;
 import com.GothWearShop.GothShop.entity.User;
 import com.GothWearShop.GothShop.repository.UsersRepository;
-import com.GothWearShop.GothShop.service.JwtService;
+
 
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,6 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setId_rol(request.getId_rol());
 
         usersRepository.save(user);
 
@@ -48,9 +47,9 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO request) {
         LoginResponseDTO response = new LoginResponseDTO();
-        Optional<User> user = usersRepository.findByUsername(request.getEmail());
+        Optional<User> user = usersRepository.findByUsername(request.getName());
 
-        if (user.isEmpty() && request.getEmail() != null) {
+        if (user.isEmpty() && request.getName() != null) {
             response.setMessage("Este usuario no se encuentra registrado");
             return response;
         }
