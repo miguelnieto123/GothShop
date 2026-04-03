@@ -3,7 +3,9 @@ package com.GothWearShop.GothShop.service;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
+
 import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Claims;
@@ -20,7 +22,7 @@ import io.jsonwebtoken.security.Keys;
  * @param <Claims>
  */
 @Service
-public class JwtService<Claims> {
+public class JwtService {
 
     // Inyectamos la clave secreta desde el archivo de configuración
     // (application.properties/yml)
@@ -34,18 +36,17 @@ public class JwtService<Claims> {
     /**
      * Genera un nuevo token JWT para un usuario específico.
      * 
-     * @param userId   Identificador único del usuario.
-     * @param username Nombre de usuario (sujeto del token).
-     * @param rolId    Identificador del rol del usuario.
+     * @param Id_user   Identificador único del usuario.
+     * @param name Nombre de usuario (sujeto del token).
+     * @param id_rol    Identificador del rol del usuario.
      * @return Un String que contiene el JWT firmado.
      */
-    public String generateToken(Long userId, String username, Long rolId) {
+    public String generateToken(Long id_user, String name, Long rol_Id) {
         return Jwts.builder()
-                .Claims(Map.of("userId", userId)) // Agregamos datos personalizados (payload)
-                .Claims(Map.of("rolId", rolId))
-                .subject(username) // Identificamos al dueño del token
-                .issuedAt(new Date()) // Fecha de creación
-                .expiration(new Date(System.currentTimeMillis() + tokenExpiration)) // Fecha de vencimiento
+                .setClaims(Map.of("id_user", id_user, "rol_id", rol_Id)) // Agregamos datos personalizados (payload)
+                .setSubject(name) // Identificamos al dueño del token
+                .setIssuedAt(new Date()) // Fecha de creación
+                .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration)) // Fecha de vencimiento
                 .signWith(getSigningKey()) // Firma digital para evitar alteraciones
                 .compact(); // Construye el String final
     }
@@ -68,7 +69,10 @@ public class JwtService<Claims> {
     public Boolean isTokenValid(String token) {
         try {
             // El parser intenta descifrar la firma con nuestra llave secreta
-            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
             // Si el token expiró, la firma es incorrecta o está corrupto, entra aquí
@@ -77,12 +81,12 @@ public class JwtService<Claims> {
         }
     }
 
-    public <T> T exctractClaims(String token, Function<Claims, T> resolver) {
-        final Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
+    public <T> T exctractClaims(String token, Function<io.jsonwebtoken.Claims, T> resolver) {
+        final io.jsonwebtoken.Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
 
         return resolver.apply(claims);
     }
@@ -104,11 +108,11 @@ public class JwtService<Claims> {
 
         try {
             // Intento de lectura normal si aún es válido
-            claims = Jwts.parser()
-                    .verifyWith(getSigningKey())
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException e) {
             // Si expiró, recuperamos los datos del cuerpo del error
             // Esto permite que el usuario no pierda su sesión de inmediato
