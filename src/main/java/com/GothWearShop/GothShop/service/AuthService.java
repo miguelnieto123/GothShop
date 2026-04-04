@@ -1,6 +1,7 @@
 package com.GothWearShop.GothShop.service;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,10 @@ import com.GothWearShop.GothShop.dto.LoginResponseDTO;
 import com.GothWearShop.GothShop.dto.MessageResponseDTO;
 import com.GothWearShop.GothShop.dto.RefreshTokenResponseDTO;
 import com.GothWearShop.GothShop.dto.RegisterRequestDTO;
+import com.GothWearShop.GothShop.entity.Rol;
 import com.GothWearShop.GothShop.entity.User;
+import com.GothWearShop.GothShop.enums.RoleName;
+import com.GothWearShop.GothShop.repository.RolRepository;
 import com.GothWearShop.GothShop.repository.UsersRepository;
 
 
@@ -25,26 +29,30 @@ public class AuthService {
 
     private final UsersRepository usersRepository;
 
+    private final RolRepository rolRepository;
+
     private final JwtService jwtService;
 
     public MessageResponseDTO register(RegisterRequestDTO request) {
-        MessageResponseDTO response = new MessageResponseDTO();
-        response.setMessage("Registro exitoso");
+    MessageResponseDTO response = new MessageResponseDTO();
+    response.setMessage("Registro exitoso");
 
-        if (usersRepository.findByUsername(request.getName()).isPresent()) {
-            throw new RuntimeException("Este nombre de usuario ya está en uso");
-        }
-
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        usersRepository.save(user);
-
-        return response;
+    if (usersRepository.findByUsername(request.getName()).isPresent()) {
+        throw new RuntimeException("Este nombre de usuario ya está en uso");
     }
 
+    User user = new User();
+    user.setName(request.getName());
+    user.setEmail(request.getEmail());
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+   
+    user.setId_rol(2L); // USER por defecto
+
+    usersRepository.save(user);
+
+    return response;
+}
     public LoginResponseDTO login(LoginRequestDTO request) {
         LoginResponseDTO response = new LoginResponseDTO();
         Optional<User> user = usersRepository.findByUsername(request.getName());
