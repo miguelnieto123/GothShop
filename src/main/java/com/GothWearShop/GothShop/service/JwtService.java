@@ -8,6 +8,9 @@ import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.GothWearShop.GothShop.util.RoleMapper;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -33,6 +36,7 @@ public class JwtService {
     @Value("${security.jwt.token-expiration}")
     private Long tokenExpiration;
 
+     private RoleMapper roleMapper;
     /**
      * Genera un nuevo token JWT para un usuario específico.
      * 
@@ -41,14 +45,22 @@ public class JwtService {
      * @param id_rol    Identificador del rol del usuario.
      * @return Un String que contiene el JWT firmado.
      */
+   
+
     public String generateToken(Long id_user, String name, Long rol_Id) {
+
+        String role = roleMapper.map(rol_Id); 
+
         return Jwts.builder()
-                .setClaims(Map.of("id_user", id_user, "rol_id", rol_Id)) // Agregamos datos personalizados (payload)
-                .setSubject(name) // Identificamos al dueño del token
-                .setIssuedAt(new Date()) // Fecha de creación
-                .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration)) // Fecha de vencimiento
-                .signWith(getSigningKey()) // Firma digital para evitar alteraciones
-                .compact(); // Construye el String final
+                .setClaims(Map.of(
+                        "id_user", id_user,
+                        "role", role 
+                ))
+                .setSubject(name)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration))
+                .signWith(getSigningKey())
+                .compact();
     }
 
     /**
@@ -96,32 +108,42 @@ public class JwtService {
     }
 
     public Long extractUserId(String token) {
-        return exctractClaims(token, claims -> claims.get("userId", Long.class));
-    }
+    return exctractClaims(token, claims -> claims.get("id_user", Long.class));
+}
 
-    public Long extractRolId(String token) {
-        return exctractClaims(token, claims -> claims.get("rolId", Long.class));
-    }
+    public String extractRole(String token) {
+    return exctractClaims(token, claims -> claims.get("role", String.class));
+}
 
     public String refreshToken(String token) {
-        Claims claims;
+    Claims claims;
 
-        try {
-            // Intento de lectura normal si aún es válido
-            claims = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            // Si expiró, recuperamos los datos del cuerpo del error
-            // Esto permite que el usuario no pierda su sesión de inmediato
-            claims = (Claims) e.getClaims();
-        } catch (JwtException e) {
-            throw new RuntimeException("Token is invalid: " + e.getMessage());
-        }
+    try {
+        claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    } catch (ExpiredJwtException e) {
+        claims = e.getClaims();
+    }
 
-        // Generamos un nuevo token con los datos recuperados
-        return generateToken(claims.get("userId", Long.class), claims.getSubject(), claims.get("rolId", Long.class));
+    return generateToken(
+            claims.get("id_user", Long.class),
+            claims.getSubject(),
+            mapRoleBack(claims.get("role", String.class)) // 🔥 inverso
+    );
+}
+
+        private Long mapRoleBack(String role) {
+        if ("ROLE_ADMIN".equals(role)) return 1L;
+        if ("ROLE_USER".equals(role)) return 2L;
+        return 2L;
+    }
+
+   
+    private SecretKey getSigningKey1() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
