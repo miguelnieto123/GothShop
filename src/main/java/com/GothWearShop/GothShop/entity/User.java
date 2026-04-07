@@ -1,15 +1,9 @@
 package com.GothWearShop.GothShop.entity;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.GothWearShop.GothShop.enums.RoleName;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,17 +20,17 @@ public class User {
     @Column(name = "id_user")
     private Long id_user ;
 
-    @Column(name = "name")
-    private String name ;
+    @Column(name = "username")
+    private String username ;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "userpassword")
+    private String userpassword;
 
-    @Column(name = "status")
-    private Boolean status;
+    @Column(name = "userstatus")
+    private Boolean userstatus;
 
     @Column(name = "register_date")
     private LocalDate register_date;

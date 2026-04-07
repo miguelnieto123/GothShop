@@ -1,13 +1,22 @@
 package com.GothWearShop.GothShop.controller;
 
-import com.GothWearShop.GothShop.dto.*;
-import com.GothWearShop.GothShop.dto.MessageResponseDTO;
-import com.GothWearShop.GothShop.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.GothWearShop.GothShop.dto.LoginRequestDTO;
+import com.GothWearShop.GothShop.dto.LoginResponseDTO;
+import com.GothWearShop.GothShop.dto.MessageResponseDTO;
+import com.GothWearShop.GothShop.dto.RefreshTokenResponseDTO;
+import com.GothWearShop.GothShop.dto.RegisterRequestDTO;
+import com.GothWearShop.GothShop.service.AuthService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,7 +25,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
+    @PostMapping("/registerUsers")
     public ResponseEntity<MessageResponseDTO> register(@RequestBody RegisterRequestDTO request) {
         try {
             MessageResponseDTO response = authService.register(request);
