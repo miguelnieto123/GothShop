@@ -3,6 +3,7 @@ package com.GothWearShop.GothShop.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.GothWearShop.GothShop.dto.MessageResponseDTO;
 import com.GothWearShop.GothShop.dto.ProductRequestDTO;
@@ -10,7 +11,7 @@ import com.GothWearShop.GothShop.entity.Product;
 import com.GothWearShop.GothShop.repository.ProductRepository;
 
 
-
+@Service
 public class ProductService {
 
      @Autowired

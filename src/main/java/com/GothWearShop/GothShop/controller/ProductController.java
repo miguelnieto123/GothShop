@@ -23,7 +23,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/register")
+    @PostMapping("/registerProduct")
     public ResponseEntity<MessageResponseDTO> register(@RequestBody ProductRequestDTO request) {
         try {
             MessageResponseDTO response = productService.register1(request);

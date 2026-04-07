@@ -37,9 +37,9 @@ public class AuthService {
     }
 
     User user = new User();
-    user.setName(request.getName());
+    user.setUsername(request.getName());
     user.setEmail(request.getEmail());
-    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    user.setUserpassword(passwordEncoder.encode(request.getPassword()));
 
    
     user.setId_rol(2L); 
@@ -59,11 +59,11 @@ public class AuthService {
 
         User userFound = user.get();
 
-        if (!passwordEncoder.matches(request.getPassword(), userFound.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), userFound.getUserpassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
-        String jwt = jwtService.generateToken(userFound.getId_user(), userFound.getName(), userFound.getId_rol());
+        String jwt = jwtService.generateToken(userFound.getId_user(), userFound.getUsername(), userFound.getId_rol());
 
         response.setMessage("Inicio de sesión exitoso");
         response.setJwt(jwt);
