@@ -1,7 +1,6 @@
 package com.GothWearShop.GothShop.service;
 
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,13 +10,9 @@ import com.GothWearShop.GothShop.dto.LoginResponseDTO;
 import com.GothWearShop.GothShop.dto.MessageResponseDTO;
 import com.GothWearShop.GothShop.dto.RefreshTokenResponseDTO;
 import com.GothWearShop.GothShop.dto.RegisterRequestDTO;
-import com.GothWearShop.GothShop.entity.Rol;
 import com.GothWearShop.GothShop.entity.User;
-import com.GothWearShop.GothShop.enums.RoleName;
 import com.GothWearShop.GothShop.repository.RolRepository;
 import com.GothWearShop.GothShop.repository.UsersRepository;
-
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +42,7 @@ public class AuthService {
     user.setPassword(passwordEncoder.encode(request.getPassword()));
 
    
-    user.setId_rol(2L); // USER por defecto
+    user.setId_rol(2L); 
 
     usersRepository.save(user);
 

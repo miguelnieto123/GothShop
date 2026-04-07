@@ -32,7 +32,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response); // 🔥 IMPORTANTE: no bloquear aquí
+            filterChain.doFilter(request, response); 
             return;
         }
 
@@ -42,13 +42,13 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             if (jwtService.isTokenValid(token)) {
 
                 String username = jwtService.extractUsername(token);
-                String role = jwtService.extractRole(token); // 🔥 AHORA ES STRING
+                String role = jwtService.extractRole(token); 
 
-                // 🔥 CREAR AUTORIDAD
+                
                 SimpleGrantedAuthority authority =
                         new SimpleGrantedAuthority(role);
 
-                // 🔥 CREAR AUTH TOKEN
+               
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
                                 username,
@@ -56,7 +56,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                                 List.of(authority)
                         );
 
-                // 🔥 GUARDAR EN CONTEXTO DE SPRING
+               
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
                 filterChain.doFilter(request, response);
