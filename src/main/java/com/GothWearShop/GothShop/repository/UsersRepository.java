@@ -9,6 +9,6 @@ import com.GothWearShop.GothShop.entity.User;
 
 @Repository
 public interface UsersRepository extends JpaRepository<User, Long>{
-    Optional<User> findByUsername(String email);
+    Optional<User> findByUsername(String name);
 
 }

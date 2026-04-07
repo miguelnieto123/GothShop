@@ -27,12 +27,11 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    // Inyectamos la clave secreta desde el archivo de configuración
-    // (application.properties/yml)
+   
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
-    // Inyectamos el tiempo de vida del token (en milisegundos)
+   
     @Value("${security.jwt.token-expiration}")
     private Long tokenExpiration;
 
@@ -63,10 +62,7 @@ public class JwtService {
                 .compact();
     }
 
-    /**
-     * Transforma la clave secreta de String (Base64) a un objeto SecretKey
-     * utilizable por la librería.
-     */
+   
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -131,7 +127,7 @@ public class JwtService {
     return generateToken(
             claims.get("id_user", Long.class),
             claims.getSubject(),
-            mapRoleBack(claims.get("role", String.class)) // 🔥 inverso
+            mapRoleBack(claims.get("role", String.class)) 
     );
 }
 
