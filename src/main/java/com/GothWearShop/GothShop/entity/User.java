@@ -1,7 +1,5 @@
 package com.GothWearShop.GothShop.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,12 +26,6 @@ public class User {
 
     @Column(name = "userpassword")
     private String userpassword;
-
-    @Column(name = "userstatus")
-    private Boolean userstatus;
-
-    @Column(name = "register_date")
-    private LocalDate register_date;
 
     @Column(name = "id_rol")
     private Long id_rol;

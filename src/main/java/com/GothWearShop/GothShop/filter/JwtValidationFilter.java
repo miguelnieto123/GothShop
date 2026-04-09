@@ -26,6 +26,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         // Un token legal debe existir y empezar con la palabra "Bearer " (portador)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Header Authorization is missing in the request\"}");
@@ -53,7 +54,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
-                response.getWriter().write("{\"error\": \"Token is invalid or expired\"}");
+                filterchain.doFilter(request, response); 
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -68,7 +69,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         if (path.equals("/auth/login") ||
-            path.equals("/auth/register") ||
+            path.equals("/auth/registerUsers") ||
             path.equals("/auth/refreshToken")) {
             return true;
         } if (method.equals("GET") && path.startsWith("/products")) {

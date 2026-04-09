@@ -31,8 +31,8 @@ public class ProductService {
         }
 
         Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
+        product.setProductname(request.getProductname());
+        product.setPrductdescription(request.getProductdescription());
         product.setPrice(request.getPrice());
 
         productRepository.save(product);
@@ -47,8 +47,8 @@ public class ProductService {
 
     public MessageResponseDTO createProduct(ProductRequestDTO request) {
         Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
+        product.setProductname(request.getProductname());
+        product.setPrductdescription(request.getProductdescription());
         product.setPrice(request.getPrice());
     
 
@@ -63,8 +63,8 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
 
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
+        product.setProductname(request.getProductname());
+        product.setPrductdescription(request.getProductdescription());
         product.setPrice(request.getPrice());
 
         productRepository.save(product);

@@ -29,35 +29,35 @@ public class AuthService {
 
     public MessageResponseDTO register(RegisterRequestDTO request) {
         MessageResponseDTO response = new MessageResponseDTO();
-        response.setMessage("Registro exitoso");
-
-        if (usersRepository.findByUsername(request.getName()).isPresent()) {
+        
+        if (usersRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new RuntimeException("Este nombre de usuario ya está en uso");
         }
 
         User user = new User();
-        user.setUsername(request.getName());
+        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setUserpassword(passwordEncoder.encode(request.getPassword()));
+        user.setUserpassword(passwordEncoder.encode(request.getUserpassword()));
         user.setId_rol(request.getId_rol());
 
         usersRepository.save(user);
 
+        response.setMessage("Registro exitoso");
         return response;
     }
 
     public LoginResponseDTO login(LoginRequestDTO request) {
         LoginResponseDTO response = new LoginResponseDTO();
-        Optional<User> user = usersRepository.findByUsername(request.getName());
+        Optional<User> user = usersRepository.findByUsername(request.getUsername());
 
-        if (user.isEmpty() && request.getName() != null) {
+        if (user.isEmpty() && request.getUsername() != null) {
             response.setMessage("Este usuario no se encuentra registrado");
             return response;
         }
 
         User userFound = user.get();
 
-        if (!passwordEncoder.matches(request.getPassword(), userFound.getUserpassword())) {
+        if (!passwordEncoder.matches(request.getUserpassword(), userFound.getUserpassword())) {
             throw new RuntimeException("Contraseña incorrecta");
         }
 
