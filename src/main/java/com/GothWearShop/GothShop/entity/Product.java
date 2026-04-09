@@ -17,19 +17,21 @@ public class Product {
     @Column(name = "id_product")
     private Long id_product;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "productname")
+    private String productname;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "productdescription")
+    private String prductdescription;
 
     @Column(name = "price")
-    private Double price;
+    private Long price;
 
     @Column(name = "stock")
     private Long stock;
 
     @Column(name = "status")
     private Boolean status;
+
+
 }
 
