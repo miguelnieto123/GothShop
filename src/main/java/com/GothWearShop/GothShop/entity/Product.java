@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name = "product")
+@Data
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Product {
     private String productname;
 
     @Column(name = "productdescription")
-    private String prductdescription;
+    private String productdescription;
 
     @Column(name = "price")
     private Long price;
