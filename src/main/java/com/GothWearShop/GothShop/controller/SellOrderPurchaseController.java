@@ -1,19 +1,24 @@
 package com.GothWearShop.GothShop.controller;
 
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.GothWearShop.GothShop.dto.MessageResponseDTO;
 import com.GothWearShop.GothShop.dto.SellOrderRequestDTO;
 import com.GothWearShop.GothShop.entity.order;
 import com.GothWearShop.GothShop.service.SellOrderService;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/purchases")
@@ -22,16 +27,11 @@ public class SellOrderPurchaseController {
 
     private final SellOrderService purchaseService;
 
-    @PostMapping
+    @PostMapping("/purchase")
     public ResponseEntity<MessageResponseDTO> createPurchase(@Valid @RequestBody SellOrderRequestDTO request, HttpServletRequest httpRequest) {
         try {
-            String role = (String) httpRequest.getAttribute("role");
-            if (!"client".equals(role)) {
-                MessageResponseDTO error = new MessageResponseDTO();
-                error.setMessage("Solo los clientes pueden realizar compras");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-            }
-            Long userId = (Long) httpRequest.getAttribute("id");
+            String rol_name = (String) httpRequest.getAttribute("role");
+            Long userId = (Long) httpRequest.getAttribute("id_user");
             return ResponseEntity.status(HttpStatus.CREATED).body(purchaseService.createPurchase(request, userId));
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,10 +41,10 @@ public class SellOrderPurchaseController {
         }
     }
 
-    @GetMapping("/my-history")
+    @GetMapping("/Historial")
     public ResponseEntity<List<order>> getMyPurchases(HttpServletRequest httpRequest) {
         try {
-            Long userId = (Long) httpRequest.getAttribute("id");
+            Long userId = (Long) httpRequest.getAttribute("id_user");
             return ResponseEntity.ok(purchaseService.getMyPurchases(userId));
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class SellOrderPurchaseController {
     @GetMapping("/all")
     public ResponseEntity<List<order>> getAllPurchases(HttpServletRequest httpRequest) {
         try {
-            String role = (String) httpRequest.getAttribute("role");
+            String role = (String) httpRequest.getAttribute("id_rol");
             if (!"admin".equals(role)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
