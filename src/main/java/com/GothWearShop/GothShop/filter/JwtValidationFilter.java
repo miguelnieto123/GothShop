@@ -8,6 +8,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.GothWearShop.GothShop.service.JwtService;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterchain)
-            throws IOException {
+            throws IOException, ServletException {
         // Obtención del encabezado, buscar el header llamado "Authorization"
         String authHeader = request.getHeader("Authorization");
 
@@ -46,16 +47,18 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
                 request.setAttribute("name", name);
                 request.setAttribute("id", id);
-                request.setAttribute("role", role);
+                request.setAttribute("rol_name", role);
+                request.setAttribute("id_user", id);
 
                 // Si todo esta bien, continuamos al siguiente paso, puede ser otro filtro o ya
                 // directamente al controller
                 filterchain.doFilter(request, response);
-            } else {
+           } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
-                filterchain.doFilter(request, response); 
-            }
+                response.getWriter().write("{\"error\": \"Invalid token\"}");
+                return;
+}
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
@@ -78,5 +81,8 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
         return false;
     }
+
+    
     
 }
+

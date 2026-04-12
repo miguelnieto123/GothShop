@@ -27,6 +27,8 @@ public class SellOrderService {
 
     private final ProductRepository productRepository;
 
+    
+
     @Transactional
     public MessageResponseDTO createPurchase(SellOrderRequestDTO request, Long UserId) {
         order purchase = new order();
@@ -34,7 +36,7 @@ public class SellOrderService {
         purchase.setOrderDate(LocalDateTime.now());
 
         List<DetailOrder> items = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal amount = BigDecimal.ZERO;
 
         for (SellOrderItemRequestDTO itemReq : request.getItems()) {
             Product product = productRepository.findById(itemReq.getProductId())
@@ -55,23 +57,23 @@ public class SellOrderService {
             item.setUnitary_Price(product.getPrice());
             items.add(item);
 
-            total = total.add(
+            amount = amount.add(
              BigDecimal.valueOf(product.getPrice())
              .multiply(BigDecimal.valueOf(itemReq.getQuantity()))
 );
         }
 
         purchase.setItems(items);
-        purchase.setTotal(total);
+        purchase.setAmount(amount);
         purchaseRepository.save(purchase);
 
         MessageResponseDTO response = new MessageResponseDTO();
-        response.setMessage("Compra realizada eitosamente. Total: $" + total);
+        response.setMessage("Compra realizada eitosamente. Total: $" + amount);
         return response;
     }
 
-    public List<order> getMyPurchases(Long userId) {
-        return purchaseRepository.findByUserId(userId);
+    public List<order> getMyPurchases(Long id_user) {
+        return purchaseRepository.findByUserId(id_user);
     }
 
     public List<order> getAllPurchases() {

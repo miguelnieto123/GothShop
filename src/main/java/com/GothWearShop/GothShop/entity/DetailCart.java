@@ -1,6 +1,6 @@
 package com.GothWearShop.GothShop.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,35 +13,28 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
+@Table(name = "detailcart")
 @Data
-@Table(name = "purchase_items")
-public class DetailOrder {
+public class DetailCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_detail-order")
-    private Long id_detail_order;
+    @Column(name = "id_detailcart")
+    private Long idDetailCart;
 
     @ManyToOne
-    @JoinColumn(name = "id_order")
-    @JsonIgnore  
-    private order id_order;
+    @JoinColumn(name = "id_shoppingcart", nullable = false)
+    private ShoppingCart shoppingCart;
 
     @ManyToOne
-    @JoinColumn(name = "id_product")
+    @JoinColumn(name = "id_product", nullable = false)
     private Product product;
 
-   
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "quantity", nullable = false)
+    private int quantity;
 
-    @Column(name = "unitary_price")
-    private Long unitary_Price;
-
-    
-
-   
-
-    
+    // getters y setters
 }

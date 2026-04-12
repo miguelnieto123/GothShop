@@ -1,13 +1,12 @@
 package com.GothWearShop.GothShop.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,27 +15,23 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
+@Table(name = "shoppingcart")
 @Data
-@Table(name = "sellorder")
-public class order {
+public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_order")
-    private Long id_order;
+    @Column(name = "id_shoppingcart")
+    private Long idShoppingCart;
 
     @Column(name = "id_user", nullable = false)
-    private Long userId;
+    private Long idUser;
 
-    @Column(name = "id_product")
-    private Long id_product;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
-    @Column(name = "amount")
-    private BigDecimal amount;
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetailCart> items = new ArrayList<>();
 
-    @Column(name = "orderdate")
-    private LocalDateTime orderDate;
-
-    @OneToMany(mappedBy = "id_order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<DetailOrder> items;
+   
 }
