@@ -29,4 +29,5 @@ public class FilterConfig {
         // Retornamos el registro configurado para que spring lo guarde en su contexto
         return registrationBean;
     }
+    
 }

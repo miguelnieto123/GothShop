@@ -28,6 +28,6 @@ public class User {
     private String userpassword;
 
     @Column(name = "id_rol")
-    private Long id_rol;
+    private Integer id_rol;
 
 }

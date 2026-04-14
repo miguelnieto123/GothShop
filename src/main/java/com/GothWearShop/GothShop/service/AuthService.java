@@ -38,7 +38,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setUserpassword(passwordEncoder.encode(request.getUserpassword()));
-        user.setId_rol(request.getId_rol());
+        user.setId_rol(2); // Asignar rol por defecto (por ejemplo, 2 para usuario normal)
 
         usersRepository.save(user);
 
