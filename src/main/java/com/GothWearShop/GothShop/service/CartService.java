@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.GothWearShop.GothShop.dto.CartRequestDTO;
@@ -30,7 +29,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final SellOrderService sellOrderService;
 
-    // agregar productos al carrito
+    
     public MessageResponseDTO addToCart(Long userId, CartRequestDTO request) {
 
         ShoppingCart cart = cartRepository.findByIdUser(userId)
@@ -49,18 +48,28 @@ public class CartService {
                 .filter(item -> item.getProduct().getId_product().equals(product.getId_product()))
                 .findFirst();
 
+       
         if (existingItem.isPresent()) {
             DetailCart item = existingItem.get();
-            item.setQuantity(item.getQuantity() + request.getQuantity());
-            item.setAmount(product.getPrice()
-                    .multiply(BigDecimal.valueOf(item.getQuantity())));
+
+            int newQuantity = item.getQuantity() + request.getQuantity();
+            item.setQuantity(newQuantity);
+
+            item.setAmount(
+                    BigDecimal.valueOf(product.getPrice()) 
+                            .multiply(BigDecimal.valueOf(newQuantity))
+            );
+
         } else {
             DetailCart newItem = new DetailCart();
             newItem.setShoppingCart(cart);
             newItem.setProduct(product);
             newItem.setQuantity(request.getQuantity());
-            newItem.setAmount(product.getPrice()
-                    .multiply(BigDecimal.valueOf(request.getQuantity())));
+
+            newItem.setAmount(
+                    BigDecimal.valueOf(product.getPrice()) 
+                            .multiply(BigDecimal.valueOf(request.getQuantity()))
+            );
 
             cart.getItems().add(newItem);
         }
@@ -72,13 +81,13 @@ public class CartService {
         return response;
     }
 
-    // ver lo que hay en el carrito
+    
     public ShoppingCart getCart(Long userId) {
         return cartRepository.findByIdUser(userId)
                 .orElseThrow(() -> new RuntimeException("Carrito vacío"));
     }
 
-    // eliminar productos
+    
     public MessageResponseDTO removeProduct(Long userId, Long productId) {
 
         ShoppingCart cart = cartRepository.findByIdUser(userId)
@@ -94,7 +103,7 @@ public class CartService {
         return response;
     }
 
-   // chechout de los productos en el carrito
+    
     public MessageResponseDTO checkout(Long userId) {
 
         ShoppingCart cart = cartRepository.findByIdUser(userId)
@@ -112,11 +121,11 @@ public class CartService {
 
         request.setItems(items);
 
-      
+
         MessageResponseDTO response =
                 sellOrderService.createPurchase(request, userId);
 
-        // limpiar carrito después de comprar
+       
         cartRepository.delete(cart);
 
         return response;
